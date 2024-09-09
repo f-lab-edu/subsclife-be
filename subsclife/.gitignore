@@ -38,3 +38,6 @@ out/
 
 ### ETC ###
 application-db.yml
+
+### QClass ###
+src/main/generated
