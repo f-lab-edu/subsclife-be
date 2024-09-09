@@ -6,6 +6,9 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @NoArgsConstructor
 @Getter
 @Entity
@@ -28,12 +31,19 @@ public class Task {
     @Embedded
     private Period period;
 
+    @OneToMany(mappedBy = "task")
+    private List<Subscribe> subscribes = new ArrayList<>();
+
     @Builder
     public Task(String title, String simpleInfo, String detail, Period period) {
         this.title = title;
         this.simpleInfo = simpleInfo;
         this.detail = detail;
         this.period = period;
+    }
+
+    public long getSubscriberCount() {
+        return subscribes.size();
     }
 
 }
