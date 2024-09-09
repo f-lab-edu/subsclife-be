@@ -1,6 +1,5 @@
 package com.fthon.subsclife.service;
 
-
 import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,4 +20,9 @@ public class UserService {
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
     }
 
+    @Transactional(readOnly = true)
+    public User findUserByIdWithSubscribes(Long id) {
+        return userRepository.findByIdWithSubscribes(id)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+    }
 }

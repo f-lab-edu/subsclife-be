@@ -3,6 +3,7 @@ package com.fthon.subsclife.controller;
 import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.exception.advice.GlobalExceptionAdvice;
+import com.fthon.subsclife.service.SubscriptionFacade;
 import com.fthon.subsclife.service.UserService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Nested;
@@ -34,6 +35,9 @@ class UserControllerTest {
     private UserService userService;
 
     @MockBean
+    private SubscriptionFacade subscriptionFacade;
+
+    @MockBean
     private UserMapper userMapper;
 
     @Nested
@@ -55,7 +59,7 @@ class UserControllerTest {
 
                 //when & then
                 mockMvc.perform(post("/api/v1/users/login")
-                                .header("user_id", userId)
+                                .header("user-id", userId)
                                 .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isOk())
                         .andExpect(jsonPath("$.name").value(USER_NAME))
@@ -71,7 +75,7 @@ class UserControllerTest {
 
                 //when & then
                 mockMvc.perform(post("/api/v1/users/login")
-                            .header("user_id", userId)
+                            .header("user-id", userId)
                             .contentType(MediaType.APPLICATION_JSON))
                         .andExpect(status().isNotFound());
             }
