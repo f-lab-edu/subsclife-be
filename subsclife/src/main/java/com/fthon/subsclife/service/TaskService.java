@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
+
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -22,5 +24,17 @@ public class TaskService {
         Task task = taskMapper.toEntity(dto);
 
         taskRepository.save(task);
+    }
+
+    @Transactional(readOnly = true)
+    public Task findTaskById(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public Task findTaskByIdWithSubscribes(Long taskId) {
+        return taskRepository.findById(taskId)
+                .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
     }
 }
