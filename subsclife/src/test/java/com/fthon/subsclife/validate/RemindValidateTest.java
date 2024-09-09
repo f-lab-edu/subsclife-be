@@ -55,8 +55,7 @@ public class RemindValidateTest {
                 Set<ConstraintViolation<RemindDto.RemindRequest>> violations = validator.validate(remindRequest);
                 List<ConstraintViolation<RemindDto.RemindRequest>> violationList = List.copyOf(violations);
 
-                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.get(2);
-
+                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.iterator().next();
                 Assertions.assertEquals("achievementRate", violation.getPropertyPath().toString());
             }
         }
@@ -73,8 +72,7 @@ public class RemindValidateTest {
                 Set<ConstraintViolation<RemindDto.RemindRequest>> violations = validator.validate(remindRequest);
                 List<ConstraintViolation<RemindDto.RemindRequest>> violationList = List.copyOf(violations);
 
-                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.get(3);
-
+                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.iterator().next();
                 Assertions.assertEquals("achieveReason", violation.getPropertyPath().toString());
             }
         }
@@ -92,8 +90,7 @@ public class RemindValidateTest {
                 Set<ConstraintViolation<RemindDto.RemindRequest>> violations = validator.validate(remindRequest);
                 List<ConstraintViolation<RemindDto.RemindRequest>> violationList = List.copyOf(violations);
 
-                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.get(4);
-
+                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.iterator().next();
                 Assertions.assertEquals("failReason", violation.getPropertyPath().toString());
             }
         }
@@ -110,8 +107,7 @@ public class RemindValidateTest {
                 Set<ConstraintViolation<RemindDto.RemindRequest>> violations = validator.validate(remindRequest);
                 List<ConstraintViolation<RemindDto.RemindRequest>> violationList = List.copyOf(violations);
 
-                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.get(5);
-
+                ConstraintViolation<RemindDto.RemindRequest> violation = violationList.iterator().next();
                 Assertions.assertEquals("improvementPlan", violation.getPropertyPath().toString());
             }
         }
