@@ -10,7 +10,7 @@ public class UserMapper {
 
     public UserDto.Response toResponseDto(User user) {
         return UserDto.Response.builder()
-                .id(user.getId())
+                .userId(user.getId())
                 .name(user.getName())
                 .nickname(user.getNickname())
                 .build();
