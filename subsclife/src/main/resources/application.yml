@@ -2,3 +2,8 @@
 spring:
   profiles:
     include: db
+
+springdoc:
+  swagger-ui:
+    path: /api-docs
+    groups-order: desc
