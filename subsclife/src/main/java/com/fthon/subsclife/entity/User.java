@@ -68,6 +68,11 @@ public class User {
             throw new UserSubscriptionOverflowException("이미 구독한 태스크입니다.");
         });
 
+        // 태스크가 이미 시작되었다면 구독할 수 없음
+        if (task.getPeriod().getStartDate().isBefore(LocalDateTime.now())) {
+            throw new TaskSubscriptionClosedException("이미 시작된 태스크는 구독할 수 없습니다.");
+        }
+
         // 태스크 구독자 수가 구독자 제한보다 많으면 안됨
         if (task.getSubscriberCount() >= TASK_SUBSCRIBER_LIMIT) {
             throw new TaskSubscriptionClosedException("구독 마감된 태스크입니다.");

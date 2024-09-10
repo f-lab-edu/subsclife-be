@@ -7,12 +7,16 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.NoSuchElementException;
+import java.util.Optional;
+import java.util.function.Function;
 
 @Service
 @RequiredArgsConstructor
 public class UserService {
 
     private final UserRepository userRepository;
+
+    //TODO 중복되는 메소드 추출하기
 
     @Transactional(readOnly = true)
     public User findUserById(Long id) {
@@ -25,4 +29,12 @@ public class UserService {
         return userRepository.findByIdWithSubscribes(id)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
     }
+
+    @Transactional(readOnly = true)
+    public User findUserByIdWithSubscribesAndTask(Long id) {
+        return userRepository.findByIdWithSubscribesAndTask(id)
+                .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+    }
+
+
 }
