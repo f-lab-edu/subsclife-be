@@ -1,6 +1,6 @@
 package com.fthon.subsclife.fixture;
 
-import com.fthon.subsclife.dto.UserResponseDto;
+import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.entity.User;
 
 public class UserFixture {
@@ -15,8 +15,8 @@ public class UserFixture {
                 .build();
     }
 
-    public static UserResponseDto user_response_dto_fixture() {
-        return UserResponseDto.builder()
+    public static UserDto.Response user_response_dto_fixture() {
+        return UserDto.Response.builder()
                 .name(USER_NAME)
                 .nickname(USER_NICKNAME)
                 .build();

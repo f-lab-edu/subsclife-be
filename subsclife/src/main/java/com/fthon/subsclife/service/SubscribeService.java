@@ -9,6 +9,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,9 +34,19 @@ public class SubscribeService {
 
     @Transactional
     public void unsubscribeTask(Long userId, Long taskId) {
-        User user = userService.findUserByIdWithSubscribes(userId);
+        User user = userService.findUserByIdWithSubscribesAndTask(userId);
 
         Subscribe subscribe = user.unsubscribe(taskId);
         subscribeRepository.delete(subscribe);
     }
+
+    @Transactional(readOnly = true)
+    public List<Subscribe> findSubscribes(Long userId) {
+        return userService
+                .findUserByIdWithSubscribesAndTask(userId)
+                .getSubscribes();
+    }
+
+
+
 }

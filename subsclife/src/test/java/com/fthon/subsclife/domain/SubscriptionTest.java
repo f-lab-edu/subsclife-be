@@ -47,6 +47,11 @@ public class SubscriptionTest {
             void setUp() {
                 //given
                 when(task.getSubscriberCount()).thenReturn(TASK_SUBSCRIBER_LIMIT + 1); // 제한을 초과하는 값 설정
+                Period period = Period.builder()
+                        .startDate(LocalDateTime.now().plusDays(1))
+                        .endDate(LocalDateTime.now().plusDays(2))
+                        .build();
+                when(task.getPeriod()).thenReturn(period);
             }
 
             @Test

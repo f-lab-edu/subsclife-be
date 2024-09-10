@@ -1,7 +1,7 @@
 package com.fthon.subsclife.controller;
 
 
-import com.fthon.subsclife.dto.UserResponseDto;
+import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.service.LoginService;
@@ -11,6 +11,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/users")
@@ -37,7 +39,7 @@ public class UserController {
             @RequestHeader("user-id") Long userId,
             @RequestParam("task_id") Long taskId) {
 
-        subscriptionFacade.subscribe(taskId, userId);
+        subscriptionFacade.subscribe(userId, taskId);
 
         return ResponseEntity.ok().build();
     }
@@ -52,6 +54,12 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
-
+    @GetMapping("/{userId}/subscribes")
+    public ResponseEntity<List<UserDto.SubscribedTaskResponse>> getSubscribedTasks(
+            @RequestHeader("user-id") Long loginUserId, // 로그인 시 사용되는 정보
+            @PathVariable("userId") Long userId
+    ) {
+        return new ResponseEntity<>(subscriptionFacade.getSubscribedTasks(userId), HttpStatus.OK);
+    }
 
 }
