@@ -26,7 +26,7 @@ public class UserDto {
 
     @Getter
     @NoArgsConstructor
-    public static class SubscribedListResponse {
+    public static class SubscribedTaskResponse {
 
         private Long taskId;
         private String title;
@@ -36,7 +36,7 @@ public class UserDto {
         private LocalDateTime endDate;
 
         @Builder
-        public SubscribedListResponse(Long taskId, String title, String simpleInfo,
+        public SubscribedTaskResponse(Long taskId, String title, String simpleInfo,
                                       Long subscriberCount, LocalDateTime startDate, LocalDateTime endDate) {
             this.taskId = taskId;
             this.title = title;
