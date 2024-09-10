@@ -4,11 +4,11 @@ import lombok.Getter;
 
 @Getter
 public class ErrorInfo {
-    private final String type;
+    private final String errorType;
     private final String message;
 
     public ErrorInfo(Throwable e) {
-        this.type = e.getClass().getName();
+        this.errorType = e.getClass().getSimpleName();
         this.message = e.getMessage();
     }
 }
