@@ -3,6 +3,7 @@ package com.fthon.subsclife.controller;
 import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.exception.advice.GlobalExceptionAdvice;
+import com.fthon.subsclife.service.LoginService;
 import com.fthon.subsclife.service.SubscriptionFacade;
 import com.fthon.subsclife.service.UserService;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +33,7 @@ class UserControllerTest {
     private MockMvc mockMvc;
 
     @MockBean
-    private UserService userService;
+    private LoginService loginService;
 
     @MockBean
     private SubscriptionFacade subscriptionFacade;
@@ -54,7 +55,7 @@ class UserControllerTest {
                 //given
                 Long userId = 1L;
                 User user = user_fixture();
-                given(userService.findUserById(userId)).willReturn(user);
+                given(loginService.getLoginUser()).willReturn(user);
                 given(userMapper.toResponseDto(user)).willReturn(user_response_dto_fixture());
 
                 //when & then
@@ -71,7 +72,7 @@ class UserControllerTest {
             void login_failed() throws Exception {
                 //given
                 Long userId = 2L;
-                given(userService.findUserById(userId)).willThrow(NoSuchElementException.class);
+                given(loginService.getLoginUser()).willThrow(NoSuchElementException.class);
 
                 //when & then
                 mockMvc.perform(post("/api/v1/users/login")

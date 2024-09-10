@@ -6,7 +6,6 @@ import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.service.LoginService;
 import com.fthon.subsclife.service.SubscriptionFacade;
-import com.fthon.subsclife.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,7 +18,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class UserController {
 
-    private final UserService userService;
 
     private final LoginService loginService;
 
@@ -28,7 +26,7 @@ public class UserController {
     private final UserMapper userMapper;
 
     @PostMapping("/login")
-    public ResponseEntity<UserResponseDto> login() {
+    public ResponseEntity<UserDto.Response> login() {
         User user = loginService.getLoginUser();
 
         return new ResponseEntity<>(userMapper.toResponseDto(user), HttpStatus.OK);
