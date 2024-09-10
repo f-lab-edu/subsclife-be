@@ -11,13 +11,13 @@ public class UserDto {
     @Getter
     @NoArgsConstructor
     public static class Response {
-        private Long id;
+        private Long userId;
         private String name;
         private String nickname;
 
         @Builder
-        public Response(Long id, String name, String nickname) {
-            this.id = id;
+        public Response(Long userId, String name, String nickname) {
+            this.userId = userId;
             this.name = name;
             this.nickname = nickname;
         }

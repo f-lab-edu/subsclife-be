@@ -46,4 +46,9 @@ public class Task {
         return subscribes.size();
     }
 
+    public boolean isSubscribed(Long userId) {
+        return subscribes.stream()
+                .anyMatch(s -> s.getUser().getId().equals(userId));
+    }
+
 }

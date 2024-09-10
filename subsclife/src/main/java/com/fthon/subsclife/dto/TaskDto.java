@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class TaskDto {
 
@@ -37,7 +38,33 @@ public class TaskDto {
             this.startDate = startDate;
             this.endDate = endDate;
         }
+    }
 
 
+    @NoArgsConstructor
+    @Getter
+    public static class DetailResponse {
+
+        private Long taskId;
+        private String title;
+        private String simpleInfo;
+        private String detail;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private List<UserDto.Response> subscribers;
+        private Boolean isSubscribed;
+
+        @Builder
+        public DetailResponse(Long taskId, String title, String simpleInfo, String detail, List<UserDto.Response> subscribers,
+                              LocalDateTime startDate, LocalDateTime endDate, Boolean isSubscribed) {
+            this.taskId = taskId;
+            this.title = title;
+            this.simpleInfo = simpleInfo;
+            this.detail = detail;
+            this.subscribers = subscribers;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.isSubscribed = isSubscribed;
+        }
     }
 }
