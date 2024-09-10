@@ -10,9 +10,10 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 
-import static com.fthon.subsclife.common.Constants.TASK_SUBSCRIBER_LIMIT;
-import static com.fthon.subsclife.common.Constants.USER_SUBSCRIBE_LIMIT;
+import static com.fthon.subsclife.common.Constants.*;
 
 
 @NoArgsConstructor
@@ -53,6 +54,20 @@ public class User {
     }
 
     public Subscribe subscribe(Task task) {
+        validateSubscribe(task);
+
+        return Subscribe.builder()
+                .user(this)
+                .task(task)
+                .build();
+    }
+
+    private void validateSubscribe(Task task) {
+        // 이미 구독했다면 안됨
+        findSubscribedTask(task.getId()).ifPresent(s -> {
+            throw new UserSubscriptionOverflowException("이미 구독한 태스크입니다.");
+        });
+
         // 태스크 구독자 수가 구독자 제한보다 많으면 안됨
         if (task.getSubscriberCount() >= TASK_SUBSCRIBER_LIMIT) {
             throw new TaskSubscriptionClosedException("구독 마감된 태스크입니다.");
@@ -62,10 +77,24 @@ public class User {
         if (getSubscribeCount() >= USER_SUBSCRIBE_LIMIT) {
             throw new UserSubscriptionOverflowException("구독 개수가 너무 많습니다.");
         }
+    }
 
-        return Subscribe.builder()
-                .user(this)
-                .task(task)
-                .build();
+    public void removeSubscribe(Subscribe subscribe) {
+        subscribes.remove(subscribe);
+        subscribe.setUser(null);
+    }
+
+    public Subscribe unsubscribe(Long taskId) {
+        Optional<Subscribe> subscribe = findSubscribedTask(taskId);
+
+        subscribe.ifPresent(this::removeSubscribe);
+
+        return subscribe.orElseThrow(() -> new NoSuchElementException("구독이 존재하지 않습니다."));
+    }
+
+    private Optional<Subscribe> findSubscribedTask(Long taskId) {
+        return subscribes
+                .stream()
+                .filter(s -> s.getTask().getId().equals(taskId)).findFirst();
     }
 }
