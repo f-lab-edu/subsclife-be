@@ -39,4 +39,16 @@ public class UserController {
         return ResponseEntity.ok().build();
     }
 
+    @PostMapping("/unsubscribe")
+    public ResponseEntity<HttpStatus> unsubscribe(
+            @RequestHeader("user-id") Long userId,
+            @RequestParam("task_id") Long taskId) {
+
+        subscriptionFacade.unsubscribe(taskId, userId);
+
+        return ResponseEntity.ok().build();
+    }
+
+
+
 }

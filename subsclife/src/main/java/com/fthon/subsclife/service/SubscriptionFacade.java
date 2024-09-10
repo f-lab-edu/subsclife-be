@@ -13,4 +13,8 @@ public class SubscriptionFacade {
         subscribeService.subscribeTask(userId, taskId);
     }
 
+    public void unsubscribe(Long userId, Long taskId) {
+        subscribeService.unsubscribeTask(taskId, userId);
+    }
+
 }
