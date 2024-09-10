@@ -64,13 +64,6 @@ public class SubscriptionTest {
             @BeforeEach
             void setUp() {
                 //given
-                when(task.getPeriod()).thenReturn(
-                        Period.builder()
-                                .startDate(LocalDateTime.now())
-                                .endDate(LocalDateTime.now().plusDays(1))
-                                .build()
-                );
-
                 List<Subscribe> subscribes = new ArrayList<>();
                 for (int i = 0; i < USER_SUBSCRIBE_LIMIT + 1; i++) {
                     Subscribe validSubscribe = Subscribe.builder()
