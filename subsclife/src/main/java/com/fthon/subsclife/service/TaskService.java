@@ -3,6 +3,7 @@ package com.fthon.subsclife.service;
 
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.dto.mapper.TaskMapper;
+import com.fthon.subsclife.entity.Subscribe;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -19,11 +20,21 @@ public class TaskService {
 
     private final TaskMapper taskMapper;
 
+    private final LoginService loginService;
+
     @Transactional
     public void saveTask(TaskDto.SaveRequest dto) {
         Task task = taskMapper.toEntity(dto);
 
         taskRepository.save(task);
+    }
+
+    @Transactional(readOnly = true)
+    public TaskDto.DetailResponse getTaskDetail(Long taskId) {
+        Task task = findTaskByIdWithSubscribesAndUser(taskId);
+        Long userId = loginService.getLoginUserId();
+
+        return taskMapper.toDetailResponse(task, userId);
     }
 
     @Transactional(readOnly = true)
@@ -34,7 +45,14 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public Task findTaskByIdWithSubscribes(Long taskId) {
-        return taskRepository.findById(taskId)
+        return taskRepository.findByIdWithSubscribes(taskId)
                 .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
     }
+
+    @Transactional(readOnly = true)
+    public Task findTaskByIdWithSubscribesAndUser(Long taskId) {
+        return taskRepository.findByIdWithSubscribesAndUser(taskId)
+                .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
+    }
+
 }
