@@ -29,4 +29,12 @@ public class SubscribeService {
         Subscribe subscribe = user.subscribe(task);
         subscribeRepository.save(subscribe);
     }
+
+    @Transactional
+    public void unsubscribeTask(Long userId, Long taskId) {
+        User user = userService.findUserByIdWithSubscribes(userId);
+
+        Subscribe subscribe = user.unsubscribe(taskId);
+        subscribeRepository.delete(subscribe);
+    }
 }
