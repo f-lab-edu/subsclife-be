@@ -1,5 +1,6 @@
 package com.fthon.subsclife.exception.advice;
 
+import com.fthon.subsclife.exception.AuthenticationException;
 import com.fthon.subsclife.exception.ErrorInfo;
 import com.fthon.subsclife.exception.TaskSubscriptionClosedException;
 import com.fthon.subsclife.exception.UserSubscriptionOverflowException;
@@ -26,5 +27,10 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(UserSubscriptionOverflowException.class)
     public ResponseEntity<ErrorInfo> UserSubscriptionOverflowExceptionHandler(UserSubscriptionOverflowException e) {
         return new ResponseEntity<>(new ErrorInfo(e), HttpStatus.CONFLICT);
+    }
+
+    @ExceptionHandler(AuthenticationException.class)
+    public ResponseEntity<ErrorInfo> AuthenticationExceptionHandler(AuthenticationException e) {
+        return new ResponseEntity<>(new ErrorInfo(e), HttpStatus.UNAUTHORIZED);
     }
 }
