@@ -93,9 +93,8 @@ public class User {
     }
 
     private Optional<Subscribe> findSubscribedTask(Long taskId) {
-        Optional<Subscribe> subscribe = subscribes.stream().filter(s -> {
-            return s.getTask().getId().equals(taskId);
-        }).findFirst();
-        return subscribe;
+        return subscribes
+                .stream()
+                .filter(s -> s.getTask().getId().equals(taskId)).findFirst();
     }
 }
