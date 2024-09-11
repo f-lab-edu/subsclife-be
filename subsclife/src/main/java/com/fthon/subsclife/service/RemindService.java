@@ -18,9 +18,9 @@ public class RemindService {
 
 
     @Transactional
-    public void create(RemindDto.RemindRequest remindRequest) {
+    public void create(RemindDto.SaveRequest SaveRequest) {
 
-            Remind remind = remindMapper.toEntity(remindRequest);
+            Remind remind = remindMapper.toEntity(SaveRequest);
 
             remindRepository.save(remind);
 

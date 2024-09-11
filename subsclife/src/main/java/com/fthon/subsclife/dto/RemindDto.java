@@ -10,7 +10,7 @@ public class RemindDto {
 
     @NoArgsConstructor
     @Getter
-    public static class RemindRequest {
+    public static class SaveRequest {
 
         @NotNull
         private Long userId;
@@ -31,7 +31,7 @@ public class RemindDto {
         private String improvementPlan;
 
         @Builder
-        public RemindRequest(Long userId, Long taskId, Integer achievementRate, String achieveReason, String failReason, String improvementPlan) {
+        public SaveRequest(Long userId, Long taskId, Integer achievementRate, String achieveReason, String failReason, String improvementPlan) {
             this.userId = userId;
             this.taskId = taskId;
             this.achievementRate = achievementRate;
