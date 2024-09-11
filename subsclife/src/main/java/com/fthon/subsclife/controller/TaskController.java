@@ -3,6 +3,7 @@ package com.fthon.subsclife.controller;
 
 import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.TaskDto;
+import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.exception.ErrorInfo;
 import com.fthon.subsclife.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -18,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -69,6 +71,20 @@ public class TaskController {
         TaskDto.SearchCondition cond = getSearchCondition(pageSize, startFrom, endTo, keyword);
 
         return new ResponseEntity<>(taskService.getTaskList(cursor, cond), HttpStatus.OK);
+    }
+
+    @GetMapping("{taskId}/subscribers")
+    @Operation(summary = "태스크 구독자 목록 조회", description = "태스크를 구독한 사용자 목록 조회 시 사용되는 API")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200", description = "태스크 조회 성공",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDto.DetailResponse.class))),
+            @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스",
+                    content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
+    })
+    public ResponseEntity<List<UserDto.Response>> getSubscribers(
+            @PathVariable Long taskId) {
+
+        return new ResponseEntity<>(taskService.getSubscriberList(taskId), HttpStatus.OK);
     }
 
     private static TaskDto.SearchCondition getSearchCondition(Long pageSize, LocalDateTime startFrom, LocalDateTime endTo, String keyword) {
