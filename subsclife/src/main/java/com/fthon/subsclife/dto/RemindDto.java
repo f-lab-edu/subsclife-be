@@ -1,6 +1,5 @@
 package com.fthon.subsclife.dto;
 
-import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
@@ -60,9 +59,23 @@ public class RemindDto {
             this.improvementPlan = improvementPlan;
             this.taskInfo = taskInfo;
         }
-
-
     }
+
+
+    @NoArgsConstructor
+    @Getter
+    public static class SingleResponse {
+
+        private UserDto.Response userInfo;
+        private Content remindContent;
+
+        @Builder
+        public SingleResponse(UserDto.Response userInfo, Content remindContent) {
+            this.userInfo = userInfo;
+            this.remindContent = remindContent;
+        }
+    }
+
 
     @NoArgsConstructor
     @Getter
@@ -82,7 +95,7 @@ public class RemindDto {
     @NoArgsConstructor
     @Getter
     public static class Content {
-
+        //TODO: remindId를 제거하고 사용하는 부분에서 선언하기
         private Long remindId;
         private Integer achievementRate;
         private String achieveReason;
@@ -116,6 +129,5 @@ public class RemindDto {
             this.pageSize = pageSize;
         }
     }
-
 
 }

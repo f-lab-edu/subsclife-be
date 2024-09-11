@@ -126,4 +126,29 @@ public class TaskDto {
     }
 
 
+    // 회고와 함께 조회되는 (이미 종료된) 태스크용
+    @NoArgsConstructor
+    @Getter
+    public static class HistoryResponse {
+
+        private Long taskId;
+        private String title;
+        private String simpleInfo;
+        private String detail;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        List<RemindDto.SingleResponse> reminds;
+
+        @Builder
+        public HistoryResponse(Long taskId, String title, String simpleInfo, String detail,
+                               LocalDateTime startDate, LocalDateTime endDate, List<RemindDto.SingleResponse> reminds) {
+            this.taskId = taskId;
+            this.title = title;
+            this.simpleInfo = simpleInfo;
+            this.detail = detail;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.reminds = reminds;
+        }
+    }
 }

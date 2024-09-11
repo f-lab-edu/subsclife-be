@@ -34,6 +34,9 @@ public class Task {
     @OneToMany(mappedBy = "task")
     private List<Subscribe> subscribes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "task")
+    private List<Remind> reminds = new ArrayList<>();
+
     @Builder
     public Task(String title, String simpleInfo, String detail, Period period) {
         this.title = title;

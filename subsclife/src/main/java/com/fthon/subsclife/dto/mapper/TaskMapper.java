@@ -1,10 +1,13 @@
 package com.fthon.subsclife.dto.mapper;
 
+import com.fthon.subsclife.dto.RemindDto;
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.entity.Period;
 import com.fthon.subsclife.entity.Task;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
+import java.util.List;
 
 
 @Component
@@ -49,6 +52,18 @@ public class TaskMapper {
                 .startDate(task.getPeriod().getStartDate())
                 .endDate(task.getPeriod().getEndDate())
                 .subscriberCount(task.getSubscriberCount())
+                .build();
+    }
+
+    public TaskDto.HistoryResponse toHistoryResponse(Task task, List<RemindDto.SingleResponse> reminds) {
+        return TaskDto.HistoryResponse.builder()
+                .taskId(task.getId())
+                .title(task.getTitle())
+                .simpleInfo(task.getSimpleInfo())
+                .detail(task.getDetail())
+                .startDate(task.getPeriod().getStartDate())
+                .endDate(task.getPeriod().getEndDate())
+                .reminds(reminds)
                 .build();
     }
 }

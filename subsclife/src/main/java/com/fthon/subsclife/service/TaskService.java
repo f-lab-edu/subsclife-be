@@ -2,8 +2,10 @@ package com.fthon.subsclife.service;
 
 
 import com.fthon.subsclife.dto.PagedItem;
+import com.fthon.subsclife.dto.RemindDto;
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.dto.UserDto;
+import com.fthon.subsclife.dto.mapper.RemindMapper;
 import com.fthon.subsclife.dto.mapper.TaskMapper;
 import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.Task;
@@ -24,6 +26,8 @@ public class TaskService {
     private final TaskMapper taskMapper;
 
     private final UserMapper userMapper;
+
+    private final RemindMapper remindMapper;
 
     private final LoginService loginService;
 
@@ -63,8 +67,19 @@ public class TaskService {
         return new PagedItem<>(taskListResponses, pagedTasks.getHasNext());
     }
 
+    @Transactional(readOnly = true)
+    public TaskDto.HistoryResponse getTaskHistory(Long taskId) {
+        Task task = findTaskByIdWithRemindsAndUser(taskId);
+
+        List<RemindDto.SingleResponse> remindList = task.getReminds().stream()
+                .map(r -> remindMapper.toSingleResponse(r, userMapper.toResponseDto(r.getUser())))
+                .toList();
+
+        return taskMapper.toHistoryResponse(task, remindList);
+    }
 
 
+    // TODO: 반복되는 단순 조회 메소드 중복 제거하기
     @Transactional(readOnly = true)
     public Task findTaskById(Long taskId) {
         return taskRepository.findById(taskId)
@@ -80,6 +95,12 @@ public class TaskService {
     @Transactional(readOnly = true)
     public Task findTaskByIdWithSubscribesAndUser(Long taskId) {
         return taskRepository.findByIdWithSubscribesAndUser(taskId)
+                .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public Task findTaskByIdWithRemindsAndUser(Long taskId) {
+        return taskRepository.findByIdWithRemindsAndUsers(taskId)
                 .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
     }
 
