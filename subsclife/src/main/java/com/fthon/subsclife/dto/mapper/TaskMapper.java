@@ -40,4 +40,15 @@ public class TaskMapper {
                 .isSubscribed(task.isSubscribed(userId))
                 .build();
     }
+
+    public TaskDto.ListResponse toListResponse(Task task) {
+        return TaskDto.ListResponse.builder()
+                .taskId(task.getId())
+                .title(task.getTitle())
+                .simpleInfo(task.getSimpleInfo())
+                .startDate(task.getPeriod().getStartDate())
+                .endDate(task.getPeriod().getEndDate())
+                .subscriberCount(task.getSubscriberCount())
+                .build();
+    }
 }
