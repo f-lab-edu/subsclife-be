@@ -7,14 +7,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class RemindMapper {
 
-    public Remind toEntity(RemindDto.RemindRequest remindRequest) {
+    public Remind toEntity(RemindDto.SaveRequest SaveRequest) {
         return Remind.builder()
-                .userId(remindRequest.getUserId())
-                .taskId(remindRequest.getTaskId())
-                .achievementRate(remindRequest.getAchievementRate())
-                .achieveReason(remindRequest.getAchieveReason())
-                .failReason(remindRequest.getFailReason())
-                .improvementPlan(remindRequest.getImprovementPlan())
+                .userId(SaveRequest.getUserId())
+                .taskId(SaveRequest.getTaskId())
+                .achievementRate(SaveRequest.getAchievementRate())
+                .achieveReason(SaveRequest.getAchieveReason())
+                .failReason(SaveRequest.getFailReason())
+                .improvementPlan(SaveRequest.getImprovementPlan())
                 .build();
     }
 

@@ -13,8 +13,8 @@ public class RemindFixture {
     private static final String improvementPlan = "improvementPlan";
 
 
-    public static RemindDto.RemindRequest remind_fixture_with_all_info() {
-        return RemindDto.RemindRequest.builder()
+    public static RemindDto.SaveRequest remind_fixture_with_all_info() {
+        return RemindDto.SaveRequest.builder()
                 .userId(Long.parseLong(userId))
                 .taskId(Long.parseLong(taskId))
                 .achievementRate(Integer.parseInt(achievementRate))
@@ -35,8 +35,8 @@ public class RemindFixture {
                 .build();
     }
 
-    public static RemindDto.RemindRequest remind_fixture_without_achievementRate() {
-        return RemindDto.RemindRequest.builder()
+    public static RemindDto.SaveRequest remind_fixture_without_achievementRate() {
+        return RemindDto.SaveRequest.builder()
                 .userId(Long.parseLong(userId))
                 .taskId(Long.parseLong(taskId))
                 .achieveReason(achieveReason)
@@ -45,8 +45,8 @@ public class RemindFixture {
                 .build();
     }
 
-    public static RemindDto.RemindRequest remind_fixture_without_achieveReason() {
-        return RemindDto.RemindRequest.builder()
+    public static RemindDto.SaveRequest remind_fixture_without_achieveReason() {
+        return RemindDto.SaveRequest.builder()
                 .userId(Long.parseLong(userId))
                 .taskId(Long.parseLong(taskId))
                 .achievementRate(Integer.parseInt(achievementRate))
@@ -55,8 +55,8 @@ public class RemindFixture {
                 .build();
     }
 
-    public static RemindDto.RemindRequest remind_fixture_without_failReason() {
-        return RemindDto.RemindRequest.builder()
+    public static RemindDto.SaveRequest remind_fixture_without_failReason() {
+        return RemindDto.SaveRequest.builder()
                 .userId(Long.parseLong(userId))
                 .taskId(Long.parseLong(taskId))
                 .achievementRate(Integer.parseInt(achievementRate))
@@ -65,8 +65,8 @@ public class RemindFixture {
                 .build();
     }
 
-    public static RemindDto.RemindRequest remind_fixture_without_improvementPlan() {
-        return RemindDto.RemindRequest.builder()
+    public static RemindDto.SaveRequest remind_fixture_without_improvementPlan() {
+        return RemindDto.SaveRequest.builder()
                 .userId(Long.parseLong(userId))
                 .taskId(Long.parseLong(taskId))
                 .achievementRate(Integer.parseInt(achievementRate))

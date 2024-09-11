@@ -21,8 +21,8 @@ public class RemindController {
 
         //1. 회고 생성
         @PostMapping("/create")
-        public ResponseEntity<HttpStatus> create(@RequestBody @Valid RemindDto.RemindRequest remindRequest) {
-                remindService.create(remindRequest);
+        public ResponseEntity<HttpStatus> create(@RequestBody @Valid RemindDto.SaveRequest SaveRequest) {
+                remindService.create(SaveRequest);
 
                 return ResponseEntity.status(HttpStatus.CREATED).build();
 
