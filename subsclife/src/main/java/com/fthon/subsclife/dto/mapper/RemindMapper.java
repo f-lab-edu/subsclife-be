@@ -1,6 +1,7 @@
 package com.fthon.subsclife.dto.mapper;
 
 import com.fthon.subsclife.dto.RemindDto;
+import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.entity.Remind;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.entity.User;
@@ -49,6 +50,20 @@ public class RemindMapper {
                                 .build()
                 )
                 .taskInfo(taskMapper.toListResponse(remind.getTask()))
+                .build();
+    }
+
+    public RemindDto.SingleResponse toSingleResponse(Remind remind, UserDto.Response userInfo) {
+        return RemindDto.SingleResponse.builder()
+                .remindContent(
+                        RemindDto.Content.builder()
+                                .remindId(remind.getId())
+                                .achievementRate(remind.getAchievementRate())
+                                .achieveReason(remind.getAchieveReason())
+                                .failReason(remind.getFailReason())
+                                .improvementPlan(remind.getImprovementPlan())
+                                .build())
+                .userInfo(userInfo)
                 .build();
     }
 }
