@@ -1,6 +1,6 @@
 package com.fthon.subsclife.service;
 
-import com.fthon.subsclife.dto.RemindDto;
+import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.mapper.RemindMapper;
 import com.fthon.subsclife.entity.Remind;
 import com.fthon.subsclife.entity.Task;
@@ -9,7 +9,10 @@ import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.NoSuchElementException;
+
+import static com.fthon.subsclife.dto.RemindDto.*;
 
 @Service
 @RequiredArgsConstructor
@@ -25,7 +28,7 @@ public class RemindService {
 
 
     @Transactional
-    public void create(RemindDto.SaveRequest saveRequest) {
+    public void create(SaveRequest saveRequest) {
 
 
             Task task = taskService.findTaskById(saveRequest.getTaskId());
@@ -38,7 +41,7 @@ public class RemindService {
     }
 
     @Transactional(readOnly = true)
-    public RemindDto.DetailResponse getRemindDetail(Long remindId) {
+    public DetailResponse getRemindDetail(Long remindId) {
 
 
         Remind remind = remindRepository.findById(remindId)
@@ -48,9 +51,25 @@ public class RemindService {
         Task task = taskService.findTaskByIdWithSubscribes(remind.getTask().getId());
 
 
-        RemindDto.DetailResponse remindDetailResponse = remindMapper.toDetailResponse(remind, task);
+        DetailResponse remindDetailResponse = remindMapper.toDetailResponse(remind, task);
 
 
         return remindDetailResponse;
     }
+
+
+    @Transactional(readOnly = true)
+    public PagedItem<ListResponse> getRemindList(Cursor cursor) {
+        Long userId = loginService.getLoginUserId();
+
+        PagedItem<Remind> reminds = remindRepository.searchRemindList(userId, cursor);
+
+        List<ListResponse> remindList = reminds.getItems()
+                .stream()
+                .map(remindMapper::toListResponse)
+                .toList();
+
+        return new PagedItem<>(remindList, reminds.getHasNext());
+    }
+
 }

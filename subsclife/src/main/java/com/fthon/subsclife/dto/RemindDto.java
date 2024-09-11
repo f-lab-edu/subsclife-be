@@ -1,9 +1,12 @@
 package com.fthon.subsclife.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 public class RemindDto {
 
@@ -65,7 +68,53 @@ public class RemindDto {
     @Getter
     public static class ListResponse {
 
-        private TaskDto.DetailResponse DetailResponse;
+        private Content remindContent;
+        private TaskDto.ListResponse taskInfo;
+
+        @Builder
+        public ListResponse(Content remindContent, TaskDto.ListResponse taskInfo) {
+            this.remindContent = remindContent;
+            this.taskInfo = taskInfo;
+        }
+    }
+
+
+    @NoArgsConstructor
+    @Getter
+    public static class Content {
+
+        private Long remindId;
+        private Integer achievementRate;
+        private String achieveReason;
+        private String failReason;
+        private String improvementPlan;
+
+        @Builder
+        public Content(Long remindId, Integer achievementRate, String achieveReason, String failReason, String improvementPlan) {
+            this.remindId = remindId;
+            this.achievementRate = achievementRate;
+            this.achieveReason = achieveReason;
+            this.failReason = failReason;
+            this.improvementPlan = improvementPlan;
+        }
+    }
+
+
+    @NoArgsConstructor
+    @Getter
+    public static class Cursor {
+        private Long remindId;
+        private LocalDateTime startDate;
+        private LocalDateTime endDate;
+        private Long pageSize;
+
+        @Builder
+        public Cursor(Long remindId, LocalDateTime startDate, LocalDateTime endDate, Long pageSize) {
+            this.remindId = remindId;
+            this.startDate = startDate;
+            this.endDate = endDate;
+            this.pageSize = pageSize;
+        }
     }
 
 
