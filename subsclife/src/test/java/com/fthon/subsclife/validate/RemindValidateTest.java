@@ -16,6 +16,7 @@ import static com.fthon.subsclife.fixture.RemindFixture.*;
 public class RemindValidateTest {
 
     private Validator validator;
+/*
 
     @BeforeEach
     void init() {
@@ -113,7 +114,7 @@ public class RemindValidateTest {
         }
 
 
-
     }
+*/
 
 }

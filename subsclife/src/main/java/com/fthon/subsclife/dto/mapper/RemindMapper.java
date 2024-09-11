@@ -1,16 +1,23 @@
 package com.fthon.subsclife.dto.mapper;
 
 import com.fthon.subsclife.dto.RemindDto;
+import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.entity.Remind;
+import com.fthon.subsclife.entity.Task;
+import com.fthon.subsclife.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
 @Component
+@RequiredArgsConstructor
 public class RemindMapper {
 
-    public Remind toEntity(RemindDto.SaveRequest SaveRequest) {
+    private final TaskMapper taskMapper;
+
+    public Remind toEntity(RemindDto.SaveRequest SaveRequest, Task task, User user) {
         return Remind.builder()
-                .userId(SaveRequest.getUserId())
-                .taskId(SaveRequest.getTaskId())
+                .user(user)
+                .task(task)
                 .achievementRate(SaveRequest.getAchievementRate())
                 .achieveReason(SaveRequest.getAchieveReason())
                 .failReason(SaveRequest.getFailReason())
@@ -18,4 +25,15 @@ public class RemindMapper {
                 .build();
     }
 
+
+    public RemindDto.DetailResponse toDetailResponse(Remind remind, Task task) {
+        return RemindDto.DetailResponse.builder()
+                .remindId(remind.getId())
+                .achievementRate(remind.getAchievementRate())
+                .achieveReason(remind.getAchieveReason())
+                .failReason(remind.getFailReason())
+                .improvementPlan(remind.getImprovementPlan())
+                .taskInfo(taskMapper.toListResponse(task))
+                .build();
+    }
 }

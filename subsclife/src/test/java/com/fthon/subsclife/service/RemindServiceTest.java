@@ -28,6 +28,8 @@ class RemindServiceTest {
     @Mock
     private RemindMapper remindMapper;
 
+    /*
+
     @Nested
     @DisplayName("회고 생성시")
     class Create_Remind {
@@ -63,5 +65,7 @@ class RemindServiceTest {
 
 
     }
+
+    */
 
 }

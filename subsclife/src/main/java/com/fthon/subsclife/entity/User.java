@@ -35,6 +35,9 @@ public class User {
     @OneToMany(mappedBy = "user")
     private List<Subscribe> subscribes = new ArrayList<>();
 
+    @OneToMany(mappedBy = "user")
+    private List<Remind> reminds = new ArrayList<>();
+
     @Builder
     public User(String name, String nickname) {
         this.name = name;
