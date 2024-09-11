@@ -76,7 +76,7 @@ public class TaskController {
     @GetMapping("{taskId}/subscribers")
     @Operation(summary = "태스크 구독자 목록 조회", description = "태스크를 구독한 사용자 목록 조회 시 사용되는 API")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "태스크 조회 성공",
+            @ApiResponse(responseCode = "200", description = "조회 성공",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = TaskDto.DetailResponse.class))),
             @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
