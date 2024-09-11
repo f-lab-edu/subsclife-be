@@ -82,9 +82,17 @@ public class TaskController {
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
     })
     public ResponseEntity<List<UserDto.Response>> getSubscribers(
-            @PathVariable Long taskId) {
+            @PathVariable("taskId") Long taskId) {
 
         return new ResponseEntity<>(taskService.getSubscriberList(taskId), HttpStatus.OK);
+    }
+
+    @GetMapping("{taskId}/history")
+    @Operation(summary = "종료된 태스크 조회", description = "종료된 태스크를 조회합니다. 작성된 회고들이 포함되어 있습니다.")
+    public ResponseEntity<TaskDto.HistoryResponse> getTaskHistory(
+            @PathVariable("taskId") Long taskId) {
+
+        return new ResponseEntity<>(taskService.getTaskHistory(taskId), HttpStatus.OK);
     }
 
     private static TaskDto.SearchCondition getSearchCondition(Long pageSize, LocalDateTime startFrom, LocalDateTime endTo, String keyword) {
