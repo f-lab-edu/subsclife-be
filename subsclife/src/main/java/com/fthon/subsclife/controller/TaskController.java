@@ -1,6 +1,7 @@
 package com.fthon.subsclife.controller;
 
 
+import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.exception.ErrorInfo;
 import com.fthon.subsclife.service.TaskService;
@@ -15,6 +16,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDateTime;
 
 @RestController
 @RequestMapping("/api/v1/tasks")
@@ -48,6 +51,41 @@ public class TaskController {
             @PathVariable("taskId") Long taskId) {
 
         return new ResponseEntity<>(taskService.getTaskDetail(taskId), HttpStatus.OK);
+    }
+
+    @GetMapping
+    @Operation(summary = "태스크 목록 조회", description = "태스크 목록 조회 시 사용되는 API")
+    public ResponseEntity<PagedItem<TaskDto.ListResponse>> searchTaskList(
+                @RequestHeader("user-id") Long userId,
+                @RequestParam(name = "task_id", required = false) Long taskId,
+                @RequestParam(name = "start_date", required = false) LocalDateTime startDate,
+                @RequestParam(name = "end_date", required = false) LocalDateTime endDate,
+                @RequestParam(name = "page_size", required = false, defaultValue = "10") Long pageSize,
+                @RequestParam(name = "start_from", required = false) LocalDateTime startFrom,
+                @RequestParam(name = "end_to", required = false) LocalDateTime endTo,
+                @RequestParam(name = "keyword", required = false) String keyword) {
+
+        TaskDto.Cursor cursor = getCursor(taskId, startDate, endDate);
+        TaskDto.SearchCondition cond = getSearchCondition(pageSize, startFrom, endTo, keyword);
+
+        return new ResponseEntity<>(taskService.getTaskList(cursor, cond), HttpStatus.OK);
+    }
+
+    private static TaskDto.SearchCondition getSearchCondition(Long pageSize, LocalDateTime startFrom, LocalDateTime endTo, String keyword) {
+        return TaskDto.SearchCondition.builder()
+                .pageSize(pageSize)
+                .startFrom(startFrom)
+                .endTo(endTo)
+                .keyword(keyword)
+                .build();
+    }
+
+    private static TaskDto.Cursor getCursor(Long taskId, LocalDateTime startDate, LocalDateTime endDate) {
+        return TaskDto.Cursor.builder()
+                .taskId(taskId)
+                .startDate(startDate)
+                .endDate(endDate)
+                .build();
     }
 
 }
