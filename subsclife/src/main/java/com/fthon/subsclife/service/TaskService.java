@@ -3,7 +3,9 @@ package com.fthon.subsclife.service;
 
 import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.TaskDto;
+import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.dto.mapper.TaskMapper;
+import com.fthon.subsclife.dto.mapper.UserMapper;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +23,8 @@ public class TaskService {
 
     private final TaskMapper taskMapper;
 
+    private final UserMapper userMapper;
+
     private final LoginService loginService;
 
     @Transactional
@@ -36,6 +40,15 @@ public class TaskService {
         Long userId = loginService.getLoginUserId();
 
         return taskMapper.toDetailResponse(task, userId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UserDto.Response> getSubscriberList(Long taskId) {
+        Task task = findTaskByIdWithSubscribesAndUser(taskId);
+
+        return task.getSubscribes()
+                .stream()
+                .map(subscribe -> userMapper.toResponseDto(subscribe.getUser())).toList();
     }
 
     @Transactional(readOnly = true)
