@@ -93,7 +93,7 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
 
     // 시작 & 마감 시간이 동일할 땐
     // 먼저 등록된 순서대로
-    private BooleanExpression startDateEqAndEndDateLtAndTaskIdGt(LocalDateTime startDate, LocalDateTime endDate, Long taskId) {
+    private BooleanExpression startDateEqAndEndDateEqAndTaskIdGt(LocalDateTime startDate, LocalDateTime endDate, Long taskId) {
         return startDateEq(startDate)
                 .and(endDateEq(endDate))
                 .and(taskIdGt(taskId));
@@ -103,7 +103,7 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
     private BooleanExpression cursorCondition(LocalDateTime startDate, LocalDateTime endDate, Long taskId) {
         return endDate == null ? null : startDateGt(startDate)
                 .or(startDateEqAndEndDateGt(startDate, endDate))
-                .or(startDateEqAndEndDateLtAndTaskIdGt(startDate, endDate, taskId));
+                .or(startDateEqAndEndDateEqAndTaskIdGt(startDate, endDate, taskId));
     }
 
     // 특정 일자 이후에 시작하는 태스크를 필터링
