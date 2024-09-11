@@ -12,6 +12,7 @@ public class RemindFixture {
     private static final String failReason = "failReason";
     private static final String improvementPlan = "improvementPlan";
 
+/*
 
     public static RemindDto.SaveRequest remind_fixture_with_all_info() {
         return RemindDto.SaveRequest.builder()
@@ -34,6 +35,7 @@ public class RemindFixture {
                 .improvementPlan(improvementPlan)
                 .build();
     }
+
 
     public static RemindDto.SaveRequest remind_fixture_without_achievementRate() {
         return RemindDto.SaveRequest.builder()
@@ -74,5 +76,6 @@ public class RemindFixture {
                 .failReason(failReason)
                 .build();
     }
+*/
 
 }

@@ -16,15 +16,16 @@ public class Remind {
     private Long id;
 
 
-    //TODO 외래키 관계 유무 (USER_ID, TASK_ID)
-    @Column(name = "USER_ID")
-    private Long userId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "USER_ID")
+    private User user;
 
-    @Column(name = "TASK_ID")
-    private Long taskId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "TASK_ID")
+    private Task task;
 
     @Column(name = "ACHIEVEMENT_RATE")
-    private int achievementRate;
+    private Integer achievementRate;
 
     @Column(name = "ACHIEVE_REASON")
     private String achieveReason;
@@ -35,10 +36,12 @@ public class Remind {
     @Column(name = "IMPROVEMENT_PLAN")
     private String improvementPlan;
 
+
+
     @Builder
-    public Remind(Long userId, Long taskId, int achievementRate, String achieveReason, String failReason, String improvementPlan) {
-        this.userId = userId;
-        this.taskId = taskId;
+    public Remind(User user, Task task, Integer achievementRate, String achieveReason, String failReason, String improvementPlan) {
+        this.user = user;
+        this.task = task;
         this.achievementRate = achievementRate;
         this.achieveReason = achieveReason;
         this.failReason = failReason;
