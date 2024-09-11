@@ -1,12 +1,12 @@
 package com.fthon.subsclife.dto.mapper;
 
 import com.fthon.subsclife.dto.RemindDto;
-import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.entity.Remind;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.entity.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+
 
 @Component
 @RequiredArgsConstructor
@@ -34,6 +34,21 @@ public class RemindMapper {
                 .failReason(remind.getFailReason())
                 .improvementPlan(remind.getImprovementPlan())
                 .taskInfo(taskMapper.toListResponse(task))
+                .build();
+    }
+
+    public RemindDto.ListResponse toListResponse(Remind remind) {
+        return RemindDto.ListResponse.builder()
+                .remindContent(
+                        RemindDto.Content.builder()
+                                .remindId(remind.getId())
+                                .achievementRate(remind.getAchievementRate())
+                                .achieveReason(remind.getAchieveReason())
+                                .failReason(remind.getFailReason())
+                                .improvementPlan(remind.getImprovementPlan())
+                                .build()
+                )
+                .taskInfo(taskMapper.toListResponse(remind.getTask()))
                 .build();
     }
 }
