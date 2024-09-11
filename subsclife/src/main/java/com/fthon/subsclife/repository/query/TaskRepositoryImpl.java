@@ -24,15 +24,16 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
                 .select(task.id)
                 .from(task)
                 .where(
+                        isClosedTask(),
                         startFromGoe(cond.getStartFrom()),
                         endToLoe(cond.getEndTo()),
                         containsKeyword(cond.getKeyword()),
-                        cursorCondition(cursor.getEndDate(), cursor.getStartDate(), cursor.getTaskId())
+                        cursorCondition(cursor.getStartDate(), cursor.getEndDate(), cursor.getTaskId())
                 )
                 .orderBy(
-                        task.period.endDate.asc(),
                         task.period.startDate.asc(),
-                        task.id.desc()
+                        task.period.endDate.asc(),
+                        task.id.asc()
                 )
                 .limit(cond.getPageSize() + 1)
                 .fetch();
@@ -47,14 +48,28 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
                 .selectFrom(task)
                 .leftJoin(task.subscribes, subscribe).fetchJoin()
                 .where(task.id.in(pagedTaskIds))
-                .orderBy(task.period.endDate.asc(), task.period.startDate.asc(), task.id.desc())
+                .orderBy(task.period.startDate.asc(), task.period.endDate.asc(), task.id.asc())
                 .fetch();
 
         return new PagedItem<>(tasks, hasNext);
     }
 
-    // 마감시간이 적게 남은 것 부터 조회하기 때문에
-    // 다음 페이지는 시간이 더 많이 남은 아이템이 되어야 함
+    // 마감된 태스크는 조회되면 안됨
+    private BooleanExpression isClosedTask() {
+        return task.period.startDate.gt(LocalDateTime.now());
+    }
+
+    // 마지막 아이템보다 시작 시간이 더 많이 남은 것을 조회
+    private BooleanExpression startDateGt(LocalDateTime startDate) {
+        return startDate != null ? task.period.startDate.gt(startDate) : null;
+    }
+
+    private BooleanExpression startDateEq(LocalDateTime startDate) {
+        return startDate != null ? task.period.startDate.eq(startDate) : null;
+    }
+
+    // 시작 시간이 동일하다면
+    // 마감 시간이 더 많이 남은 것을 조회
     private BooleanExpression endDateGt(LocalDateTime endDate) {
         return endDate != null ? task.period.endDate.gt(endDate) : null;
     }
@@ -63,42 +78,32 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
         return endDate != null ? task.period.endDate.eq(endDate) : null;
     }
 
-    // 마감시간이 동일하다면
-    // 먼저 시작할 태스크부터 조회되어야 함
-    private BooleanExpression startDateLt(LocalDateTime startDate) {
-        return startDate != null ? task.period.startDate.lt(startDate) : null;
-    }
-
-    private BooleanExpression startDateEq(LocalDateTime startDate) {
-        return startDate != null ? task.period.startDate.eq(startDate) : null;
-    }
-
     // 시작 & 마감시간이 동일하다면
-    // 먼저 등록된 태스크부터 조회되어야 함
-    private BooleanExpression taskIdLt(Long taskId) {
-        return taskId != null ? task.id.lt(taskId) : null;
+    // 나중에 등록된 태스크를 조회
+    private BooleanExpression taskIdGt(Long taskId) {
+        return taskId != null ? task.id.gt(taskId) : null;
     }
 
-    // 마감 시간이 동일할 때는
-    // 시작 시간이 빠른걸로
-    private BooleanExpression endDateEqAndStartDateLt(LocalDateTime endDate, LocalDateTime startDate) {
-        return endDateEq(endDate)
-                .and(startDateLt(startDate));
+    // 시작 시간이 동일할 때는
+    // 마감 시간이 빠른걸로
+    private BooleanExpression startDateEqAndEndDateGt(LocalDateTime startDate, LocalDateTime endDate) {
+        return startDateEq(startDate)
+                .and(endDateGt(endDate));
     }
 
-    // 마감 시간이 동일하고 시작 시간이 똑같을 땐
+    // 시작 & 마감 시간이 동일할 땐
     // 먼저 등록된 순서대로
-    private BooleanExpression endDateEqAndStartDateEqAndIdLt(LocalDateTime endDate, LocalDateTime startDate, Long taskId) {
-        return endDateEq(endDate)
-                .and(startDateEq(startDate))
-                .and(taskIdLt(taskId));
+    private BooleanExpression startDateEqAndEndDateLtAndTaskIdGt(LocalDateTime startDate, LocalDateTime endDate, Long taskId) {
+        return startDateEq(startDate)
+                .and(endDateEq(endDate))
+                .and(taskIdGt(taskId));
     }
 
     // and() 메소드 직접 호출 시 null check 필요
-    private BooleanExpression cursorCondition(LocalDateTime endDate, LocalDateTime startDate, Long taskId) {
-        return endDate == null ? null : endDateGt(endDate)
-                .or(endDateEqAndStartDateLt(endDate, startDate))
-                .or(endDateEqAndStartDateEqAndIdLt(endDate, startDate, taskId));
+    private BooleanExpression cursorCondition(LocalDateTime startDate, LocalDateTime endDate, Long taskId) {
+        return endDate == null ? null : startDateGt(startDate)
+                .or(startDateEqAndEndDateGt(startDate, endDate))
+                .or(startDateEqAndEndDateLtAndTaskIdGt(startDate, endDate, taskId));
     }
 
     // 특정 일자 이후에 시작하는 태스크를 필터링
