@@ -1,15 +1,16 @@
 package com.fthon.subsclife.service;
 
 
+import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.dto.mapper.TaskMapper;
-import com.fthon.subsclife.entity.Subscribe;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
 
 @Service
@@ -36,6 +37,20 @@ public class TaskService {
 
         return taskMapper.toDetailResponse(task, userId);
     }
+
+    @Transactional(readOnly = true)
+    public PagedItem<TaskDto.ListResponse> getTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond) {
+        PagedItem<Task> pagedTasks = taskRepository.searchTaskList(cursor, cond);
+
+        List<TaskDto.ListResponse> taskListResponses = pagedTasks.getItems()
+                .stream()
+                .map(taskMapper::toListResponse)
+                .toList();
+
+        return new PagedItem<>(taskListResponses, pagedTasks.getHasNext());
+    }
+
+
 
     @Transactional(readOnly = true)
     public Task findTaskById(Long taskId) {
