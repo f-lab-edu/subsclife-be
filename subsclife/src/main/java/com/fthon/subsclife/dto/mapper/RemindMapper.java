@@ -38,7 +38,11 @@ public class RemindMapper {
                 .build();
     }
 
-    public RemindDto.ListResponse toListResponse(Remind remind) {
+
+    /**
+     * 완료된 태스크의 경우 작성된 회고도 참여자에 포함해야 함
+     */
+    public RemindDto.ListResponse toListResponse(Remind remind, Integer reminderCount) {
         return RemindDto.ListResponse.builder()
                 .remindContent(
                         RemindDto.Content.builder()
@@ -49,7 +53,7 @@ public class RemindMapper {
                                 .improvementPlan(remind.getImprovementPlan())
                                 .build()
                 )
-                .taskInfo(taskMapper.toListResponse(remind.getTask()))
+                .taskInfo(taskMapper.toListResponse(remind.getTask(), reminderCount))
                 .build();
     }
 

@@ -55,6 +55,19 @@ public class TaskMapper {
                 .build();
     }
 
+
+    public TaskDto.ListResponse toListResponse(Task task, Integer reminderCount) {
+        return TaskDto.ListResponse.builder()
+                .taskId(task.getId())
+                .title(task.getTitle())
+                .simpleInfo(task.getSimpleInfo())
+                .startDate(task.getPeriod().getStartDate())
+                .endDate(task.getPeriod().getEndDate())
+                .subscriberCount(task.getSubscriberCount() + reminderCount)
+                .build();
+    }
+
+
     public TaskDto.HistoryResponse toHistoryResponse(Task task, List<RemindDto.SingleResponse> reminds) {
         return TaskDto.HistoryResponse.builder()
                 .taskId(task.getId())

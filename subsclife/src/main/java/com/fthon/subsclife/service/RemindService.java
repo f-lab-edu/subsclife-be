@@ -82,12 +82,27 @@ public class RemindService {
 
         PagedItem<Remind> reminds = remindRepository.searchRemindList(userId, cursor);
 
+        List<Long> taskIds = reminds.getItems().stream()
+                .map(r -> r.getTask().getId())
+                .toList();
+
+        List<Task> tasks = taskService.findTasksByIdsWithReminds(taskIds);
+
         List<ListResponse> remindList = reminds.getItems()
                 .stream()
-                .map(remindMapper::toListResponse)
+                .map(r -> remindMapper.toListResponse(r, getRemindCountByTaskId(tasks, r.getTask().getId())))
                 .toList();
 
         return new PagedItem<>(remindList, reminds.getHasNext());
     }
 
+
+    private Integer getRemindCountByTaskId(List<Task> tasks, Long taskId) {
+        for (Task task : tasks) {
+            if (task.getId().equals(taskId)) {
+                return task.getReminds().size();
+            }
+        }
+        return 0;
+    }
 }
