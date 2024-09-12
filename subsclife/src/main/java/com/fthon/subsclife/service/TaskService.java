@@ -8,15 +8,20 @@ import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.dto.mapper.RemindMapper;
 import com.fthon.subsclife.dto.mapper.TaskMapper;
 import com.fthon.subsclife.dto.mapper.UserMapper;
+import com.fthon.subsclife.entity.Subscribe;
 import com.fthon.subsclife.entity.Task;
+import com.fthon.subsclife.entity.User;
 import com.fthon.subsclife.repository.TaskRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class TaskService {
@@ -30,6 +35,9 @@ public class TaskService {
     private final RemindMapper remindMapper;
 
     private final LoginService loginService;
+
+    private final UserService userService;
+
 
     @Transactional
     public void saveTask(TaskDto.SaveRequest dto) {
@@ -46,14 +54,26 @@ public class TaskService {
         return taskMapper.toDetailResponse(task, userId);
     }
 
+    /**
+     * 종료된 태스크의 참여자를 조회합니다.
+     * 구독자와 회고를 작성한 사용자를 포함합니다.
+     */
     @Transactional(readOnly = true)
     public List<UserDto.Response> getSubscriberList(Long taskId) {
         Task task = findTaskByIdWithSubscribesAndUser(taskId);
 
-        return task.getSubscribes()
+        List<User> users = userService.findUserByTaskIdWhoReminded(taskId);
+
+        users.addAll(task.getSubscribes()
                 .stream()
-                .map(subscribe -> userMapper.toResponseDto(subscribe.getUser())).toList();
+                .map(Subscribe::getUser).toList());
+
+        return users.stream()
+                .map(userMapper::toResponseDto)
+                .toList();
     }
+
+
 
     @Transactional(readOnly = true)
     public PagedItem<TaskDto.ListResponse> getTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond) {
