@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 
@@ -28,4 +29,10 @@ public interface TaskRepository extends JpaRepository<Task, Long>, QueryTaskRepo
             " JOIN FETCH r.user u" +
             " WHERE t.id = :taskId")
     Optional<Task> findByIdWithRemindsAndUsers(@Param("taskId") Long taskId);
+
+    // 회고 목록 조회 중 태스크 참여자 수를 조회하기 위함
+    @Query("SELECT t FROM Task t" +
+            " JOIN FETCH t.reminds r" +
+            " WHERE t.id IN :taskIds")
+    List<Task> findTasksByIdsWithReminds(@Param("taskIds") List<Long> taskIds);
 }

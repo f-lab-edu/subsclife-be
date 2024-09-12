@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -122,6 +121,11 @@ public class TaskService {
     public Task findTaskByIdWithRemindsAndUser(Long taskId) {
         return taskRepository.findByIdWithRemindsAndUsers(taskId)
                 .orElseThrow(() -> new NoSuchElementException("찾으려는 태스크가 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public List<Task> findTasksByIdsWithReminds(List<Long> taskIds) {
+        return taskRepository.findTasksByIdsWithReminds(taskIds);
     }
 
 }
