@@ -6,9 +6,9 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.Optional;
-import java.util.function.Function;
+
 
 @Service
 @RequiredArgsConstructor
@@ -34,6 +34,11 @@ public class UserService {
     public User findUserByIdWithSubscribesAndTask(Long id) {
         return userRepository.findByIdWithSubscribesAndTask(id)
                 .orElseThrow(() -> new NoSuchElementException("사용자를 찾을 수 없습니다."));
+    }
+
+    @Transactional(readOnly = true)
+    public List<User> findUserByTaskIdWhoReminded(Long taskId) {
+        return userRepository.findUsersWhoRemindedByTaskId(taskId);
     }
 
 
