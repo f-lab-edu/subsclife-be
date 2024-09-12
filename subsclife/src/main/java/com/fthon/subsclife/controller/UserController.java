@@ -41,7 +41,9 @@ public class UserController {
             @ApiResponse(responseCode = "404", description = "존재하지 않는 사용자",
                     content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
     })
-    public ResponseEntity<UserDto.Response> login() {
+    public ResponseEntity<UserDto.Response> login(
+            @RequestHeader("user-id") Long userId
+    ) {
         User user = loginService.getLoginUser();
 
         return new ResponseEntity<>(userMapper.toResponseDto(user), HttpStatus.OK);

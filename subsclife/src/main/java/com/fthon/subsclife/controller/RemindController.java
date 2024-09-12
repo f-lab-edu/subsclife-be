@@ -2,12 +2,12 @@ package com.fthon.subsclife.controller;
 
 import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.RemindDto;
+import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.exception.ErrorInfo;
 import com.fthon.subsclife.service.RemindService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.Parameters;
-import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -15,6 +15,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,14 +30,48 @@ public class RemindController {
 
         //1. 회고 생성
         @PostMapping
-        public ResponseEntity<HttpStatus> create(@RequestBody @Valid RemindDto.SaveRequest SaveRequest) {
+        @Operation(
+                summary = "회고 생성",
+                description = "회고 생성 시 사용되는 API",
+                requestBody = @io.swagger.v3.oas.annotations.parameters.RequestBody(
+                        content = @Content(
+                                mediaType = MediaType.APPLICATION_JSON_VALUE,
+                                schema = @Schema(
+                                        allOf = { RemindDto.SaveRequest.class },
+                                        requiredProperties = { "taskId", "achievementRate", "achieveReason", "failReason", "improvementPlan" }
+                                )
+                        )
+                )
+        )
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "생성 성공"),
+                @ApiResponse(responseCode = "401", description = "user-id가 없거나 잘못된 값이 전달되었음",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class))),
+                @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스(태스크)",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
+
+        })
+        public ResponseEntity<HttpStatus> create(
+                @RequestHeader("user-id") Long userId,
+                @RequestBody @Valid RemindDto.SaveRequest SaveRequest
+        ) {
                 remindService.create(SaveRequest);
 
                 return ResponseEntity.status(HttpStatus.CREATED).build();
 
         }
 
+
         @GetMapping("/{remindId}")
+        @Operation(summary = "회고 상세 조회(단일 조회)", description = "회고 상세 조회 페이지에서 사용되는 API")
+        @ApiResponses(value = {
+                @ApiResponse(responseCode = "200", description = "조회 성공",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = RemindDto.DetailResponse.class))),
+                @ApiResponse(responseCode = "401", description = "user-id가 없거나 잘못된 값이 전달되었음",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class))),
+                @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스(회고)",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
+        })
         public ResponseEntity<RemindDto.DetailResponse> detail(
                 @RequestHeader("user-id") Long userId,
                 @PathVariable("remindId") Long remindId) {
