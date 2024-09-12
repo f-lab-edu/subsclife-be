@@ -18,7 +18,7 @@ public interface TaskRepository extends JpaRepository<Task, Long>, QueryTaskRepo
 
     @Query("SELECT t FROM Task t" +
             " LEFT JOIN FETCH t.subscribes s" +
-            " JOIN FETCH s.user u" +
+            " LEFT JOIN FETCH s.user u" +
             " WHERE t.id = :taskId")
     Optional<Task> findByIdWithSubscribesAndUser(@Param("taskId") Long taskId);
 
