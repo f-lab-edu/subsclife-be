@@ -1,9 +1,6 @@
 package com.fthon.subsclife.exception.advice;
 
-import com.fthon.subsclife.exception.AuthenticationException;
-import com.fthon.subsclife.exception.ErrorInfo;
-import com.fthon.subsclife.exception.TaskSubscriptionClosedException;
-import com.fthon.subsclife.exception.UserSubscriptionOverflowException;
+import com.fthon.subsclife.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -32,5 +29,10 @@ public class GlobalExceptionAdvice {
     @ExceptionHandler(AuthenticationException.class)
     public ResponseEntity<ErrorInfo> AuthenticationExceptionHandler(AuthenticationException e) {
         return new ResponseEntity<>(new ErrorInfo(e), HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(DuplicateRequestException.class)
+    public ResponseEntity<ErrorInfo> DuplicateRequestExceptionHandler(DuplicateRequestException e) {
+        return new ResponseEntity<>(new ErrorInfo(e), HttpStatus.CONFLICT);
     }
 }

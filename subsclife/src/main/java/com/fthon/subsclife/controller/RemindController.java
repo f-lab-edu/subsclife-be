@@ -48,8 +48,9 @@ public class RemindController {
                 @ApiResponse(responseCode = "401", description = "user-id가 없거나 잘못된 값이 전달되었음",
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class))),
                 @ApiResponse(responseCode = "404", description = "존재하지 않는 리소스(태스크)",
+                        content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class))),
+                @ApiResponse(responseCode = "409", description = "존재하지 않는 리소스(태스크)",
                         content = @Content(mediaType = "application/json", schema = @Schema(implementation = ErrorInfo.class)))
-
         })
         public ResponseEntity<HttpStatus> create(
                 @RequestHeader("user-id") Long userId,
@@ -58,7 +59,6 @@ public class RemindController {
                 remindService.create(SaveRequest);
 
                 return ResponseEntity.status(HttpStatus.CREATED).build();
-
         }
 
 
