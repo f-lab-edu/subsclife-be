@@ -76,7 +76,8 @@ public class TaskService {
 
     @Transactional(readOnly = true)
     public PagedItem<TaskDto.ListResponse> getTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond) {
-        PagedItem<Task> pagedTasks = taskRepository.searchTaskList(cursor, cond);
+        Long userId = loginService.getLoginUserId();
+        PagedItem<Task> pagedTasks = taskRepository.searchTaskList(cursor, cond, userId);
 
         List<TaskDto.ListResponse> taskListResponses = pagedTasks.getItems()
                 .stream()

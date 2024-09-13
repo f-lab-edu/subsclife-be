@@ -19,12 +19,14 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public PagedItem<Task> searchTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond) {
+    public PagedItem<Task> searchTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond, Long userId) {
         List<Long> pagedTaskIds = queryFactory
                 .select(task.id)
                 .from(task)
+                .leftJoin(task.subscribes, subscribe)
                 .where(
                         isClosedTask(),
+                        isNotSubscribedTask(userId),
                         startFromGoe(cond.getStartFrom()),
                         endToLoe(cond.getEndTo()),
                         containsKeyword(cond.getKeyword()),
@@ -52,6 +54,11 @@ public class TaskRepositoryImpl implements QueryTaskRepository {
                 .fetch();
 
         return new PagedItem<>(tasks, hasNext);
+    }
+
+    private BooleanExpression isNotSubscribedTask(Long userId) {
+        return subscribe.user.id.isNull().
+                or(subscribe.user.id.ne(userId));
     }
 
     // 마감된 태스크는 조회되면 안됨

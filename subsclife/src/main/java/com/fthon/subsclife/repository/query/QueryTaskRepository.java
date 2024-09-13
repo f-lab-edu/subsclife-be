@@ -7,5 +7,5 @@ import com.fthon.subsclife.entity.Task;
 
 public interface QueryTaskRepository {
 
-    PagedItem<Task> searchTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond);
+    PagedItem<Task> searchTaskList(TaskDto.Cursor cursor, TaskDto.SearchCondition cond, Long userId);
 }
