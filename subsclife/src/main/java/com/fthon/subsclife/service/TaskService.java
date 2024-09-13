@@ -39,10 +39,10 @@ public class TaskService {
 
 
     @Transactional
-    public void saveTask(TaskDto.SaveRequest dto) {
+    public Long saveTask(TaskDto.SaveRequest dto) {
         Task task = taskMapper.toEntity(dto);
 
-        taskRepository.save(task);
+        return taskRepository.save(task).getId();
     }
 
     @Transactional(readOnly = true)
