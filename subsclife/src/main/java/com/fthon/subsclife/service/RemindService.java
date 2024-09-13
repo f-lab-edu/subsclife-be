@@ -3,11 +3,10 @@ package com.fthon.subsclife.service;
 import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.mapper.RemindMapper;
 import com.fthon.subsclife.entity.Remind;
-import com.fthon.subsclife.entity.Subscribe;
 import com.fthon.subsclife.entity.Task;
 import com.fthon.subsclife.entity.User;
+import com.fthon.subsclife.exception.DuplicateRequestException;
 import com.fthon.subsclife.repository.RemindRepository;
-import com.fthon.subsclife.repository.SubscribeRepository;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -29,11 +28,9 @@ public class RemindService {
 
     private final TaskService taskService;
 
-    //타 Service를 사용하면 결합도 관련 까리한데...?
     private final UserService userService;
+    private final SubscribeService subscribeService;
 
-    //타 Repository 사용해도될까?
-    private final SubscribeRepository subscribeRepository;
 
     @Transactional
     public void create(SaveRequest saveRequest) {
@@ -42,7 +39,7 @@ public class RemindService {
         Long userId = loginService.getLoginUserId();
 
         //User 정보 가져오기
-        User user = userService.findUserByIdWithSubscribesAndTask(userId);
+        User user = userService.findUserByIdWithSubscribes(userId);
 
         //Task 정보 가져오기
         Task task = taskService.findTaskById(saveRequest.getTaskId());
@@ -50,12 +47,17 @@ public class RemindService {
         //Remind 정보 생성
         Remind remind = remindMapper.toEntity(saveRequest, task, loginService.getLoginUser());
 
-        //회고작성한 Task구독 취소
-        Subscribe subscribe = user.unsubscribe(task.getId());
-        subscribeRepository.delete(subscribe);
+        if (isWrittenRemind(user, task)) {
+            throw new DuplicateRequestException("이미 회고가 작성된 태스크입니다.");
+        }
 
+        subscribeService.unsubscribeTask(userId, task.getId());
         remindRepository.save(remind);
+    }
 
+    private static boolean isWrittenRemind(User user, Task task) {
+        return user.getReminds().stream()
+                .anyMatch(r -> r.getTask().getId().equals(task.getId()));
     }
 
     @Transactional(readOnly = true)
@@ -95,6 +97,8 @@ public class RemindService {
 
         return new PagedItem<>(remindList, reminds.getHasNext());
     }
+
+
 
 
     private Integer getRemindCountByTaskId(List<Task> tasks, Long taskId) {
