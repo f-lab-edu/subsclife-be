@@ -5,6 +5,7 @@ import com.fthon.subsclife.dto.PagedItem;
 import com.fthon.subsclife.dto.TaskDto;
 import com.fthon.subsclife.dto.UserDto;
 import com.fthon.subsclife.exception.ErrorInfo;
+import com.fthon.subsclife.service.TaskFacade;
 import com.fthon.subsclife.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Content;
@@ -29,11 +30,16 @@ public class TaskController {
 
     private final TaskService taskService;
 
+    private final TaskFacade taskFacade;
+
     @PostMapping
     @Operation(summary = "태스크 생성", description = "태스크 생성 요청 시 사용되는 API")
     @ApiResponse(responseCode = "200", description = "요청 성공", content = @Content())
-    public ResponseEntity<HttpStatus> createTask(@RequestBody @Valid TaskDto.SaveRequest saveRequestDto) {
-        taskService.saveTask(saveRequestDto);
+    public ResponseEntity<HttpStatus> createTask(
+            @RequestHeader("user-id") Long userId,
+            @RequestBody @Valid TaskDto.SaveRequest saveRequestDto
+    ) {
+        taskFacade.saveTaskThenSubscribe(saveRequestDto);
 
         return ResponseEntity.ok().build();
     }
