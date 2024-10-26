@@ -13,6 +13,7 @@
 - SpringBoot 3.3.3
 - Spring Data JPA + QueryDSL
 - MySQL 8.0
+- Naver Cloud Platform micro
 
 ### ERD
 ![image](https://github.com/user-attachments/assets/b1df66d0-0726-41f0-8de5-47c1ab907ba6)
